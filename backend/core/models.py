@@ -11,7 +11,6 @@ class User(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     firstname = Column(String)
     lastname = Column(String)
-    role = Column(String, default="student")
 
 
 class Course(Base):

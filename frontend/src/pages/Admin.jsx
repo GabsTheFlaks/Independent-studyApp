@@ -18,12 +18,8 @@ const Admin = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
-    const [imageError, setImageError] = useState(false);
 
     const handleChange = (e) => {
-        if (e.target.name === 'thumbnail_url') {
-            setImageError(false); // reseta o erro quando digita um link novo
-        }
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
@@ -134,32 +130,13 @@ const Admin = () => {
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">URL de Thumbnail (Imagem)</label>
                         <input
-                            type="url"
+                            type="text"
                             name="thumbnail_url"
                             value={formData.thumbnail_url}
                             onChange={handleChange}
                             className="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500"
                             placeholder="https://..."
                         />
-                        {/* Dynamic Preview da Imagem */}
-                        {formData.thumbnail_url && (
-                            <div className="mt-3">
-                                <p className="text-xs text-gray-500 mb-1">Preview da miniatura:</p>
-                                {imageError ? (
-                                    <div className="w-full max-w-sm h-32 bg-red-50 border border-red-200 rounded flex flex-col items-center justify-center text-red-500">
-                                        <span className="text-sm font-medium">Erro ao carregar imagem</span>
-                                        <span className="text-xs mt-1 px-2 text-center">A imagem principal será substituída por um placeholder no Dashboard.</span>
-                                    </div>
-                                ) : (
-                                    <img
-                                        src={formData.thumbnail_url}
-                                        alt="Preview"
-                                        className="w-full max-w-sm h-32 object-cover rounded shadow-sm border border-gray-200"
-                                        onError={() => setImageError(true)}
-                                    />
-                                )}
-                            </div>
-                        )}
                     </div>
 
                     <div>

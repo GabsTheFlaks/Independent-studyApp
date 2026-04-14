@@ -5,7 +5,7 @@ from typing import List, Optional
 
 from core.database import get_db
 from core.models import Course
-from core.security import get_current_user, get_admin_user
+from core.security import get_current_user
 
 router = APIRouter()
 
@@ -63,11 +63,11 @@ async def get_course_by_id(
 )
 async def create_course(
     course_data: CourseCreate,
-    admin_user: dict = Depends(get_admin_user),
+    current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """
-    Cadastra um novo curso na plataforma. (Apenas admins)
+    Cadastra um novo curso na plataforma.
     """
     new_course = Course(**course_data.model_dump())
     db.add(new_course)

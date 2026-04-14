@@ -5,6 +5,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import Dashboard from './pages/Dashboard';
+import Viewer from './pages/Viewer';
 
 function App() {
     const { loading } = useAuth();
@@ -27,6 +28,7 @@ function App() {
                 {/* Rotas protegidas */}
                 <Route element={<ProtectedRoute />}>
                     <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/course/:id" element={<Viewer />} />
                 </Route>
 
                 {/* Redirect default */}

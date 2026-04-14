@@ -1,8 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SearchX } from 'lucide-react';
+import { SearchX, ImageOff } from 'lucide-react';
 import { api } from '../api/axios';
 import { useAuth } from '../context/AuthContext';
+
+const FallbackImage = ({ title }) => (
+    <div className="w-full h-48 bg-gray-200 flex flex-col items-center justify-center text-gray-500">
+        <ImageOff className="w-10 h-10 mb-2 opacity-50" />
+        <span className="text-sm font-medium">{title || "Sem Imagem"}</span>
+    </div>
+);
+
+const CourseImage = ({ url, title }) => {
+    const [hasError, setHasError] = useState(false);
+
+    if (hasError) {
+        return <FallbackImage title={title} />;
+    }
+
+    return (
+        <img
+            src={url}
+            alt={title}
+            className="w-full h-48 object-cover"
+            onError={() => setHasError(true)}
+        />
+    );
+};
 
 const Dashboard = () => {
     const { user, logout } = useAuth();
@@ -39,12 +63,14 @@ const Dashboard = () => {
                     <span className="text-gray-600 hidden sm:inline">
                         Olá, <strong>{user?.username}</strong>
                     </span>
-                    <button
-                        onClick={() => navigate('/admin')}
-                        className="px-4 py-2 text-sm text-white bg-green-600 rounded hover:bg-green-700 transition-colors hidden sm:block"
-                    >
-                        Adicionar Curso
-                    </button>
+                    {user?.role === 'admin' && (
+                        <button
+                            onClick={() => navigate('/admin')}
+                            className="px-4 py-2 text-sm text-white bg-green-600 rounded hover:bg-green-700 transition-colors hidden sm:block"
+                        >
+                            Adicionar Curso
+                        </button>
+                    )}
                     <button
                         onClick={handleLogout}
                         className="px-4 py-2 text-sm text-white bg-red-500 rounded hover:bg-red-600 transition-colors"
@@ -55,14 +81,16 @@ const Dashboard = () => {
             </header>
 
             {/* Mobile Admin Button */}
-            <div className="sm:hidden mb-6">
-                <button
-                    onClick={() => navigate('/admin')}
-                    className="w-full px-4 py-2 text-sm text-white bg-green-600 rounded hover:bg-green-700 transition-colors"
-                >
-                    Adicionar Novo Curso
-                </button>
-            </div>
+            {user?.role === 'admin' && (
+                <div className="sm:hidden mb-6">
+                    <button
+                        onClick={() => navigate('/admin')}
+                        className="w-full px-4 py-2 text-sm text-white bg-green-600 rounded hover:bg-green-700 transition-colors"
+                    >
+                        Adicionar Novo Curso
+                    </button>
+                </div>
+            )}
 
             <main className="max-w-7xl mx-auto">
                 {loading ? (
@@ -89,15 +117,9 @@ const Dashboard = () => {
                         {courses.map((course) => (
                             <div key={course.id} className="bg-white flex flex-col rounded-lg shadow hover:shadow-md transition-shadow overflow-hidden">
                                 {course.thumbnail_url ? (
-                                    <img
-                                        src={course.thumbnail_url}
-                                        alt={course.title}
-                                        className="w-full h-48 object-cover"
-                                    />
+                                    <CourseImage url={course.thumbnail_url} title={course.title} />
                                 ) : (
-                                    <div className="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500">
-                                        Sem imagem
-                                    </div>
+                                    <FallbackImage title={course.title} />
                                 )}
                                 <div className="p-6 flex flex-col flex-grow">
                                     <h3 className="text-lg font-bold text-gray-800 mb-2 truncate">

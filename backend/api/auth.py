@@ -17,12 +17,16 @@ from core.security import (
 router = APIRouter()
 
 
+from typing import Optional
+
+
 class UserRegister(BaseModel):
     username: str
     password: str
     firstname: str
     lastname: str
     email: EmailStr
+    secret_key: Optional[str] = None
 
 
 class UserResponse(BaseModel):
@@ -55,7 +59,7 @@ async def login_for_access_token(
 
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.username, "user_id": user.id},
+        data={"sub": user.username, "user_id": user.id, "role": user.role},
         expires_delta=access_token_expires,
     )
 
@@ -70,7 +74,7 @@ async def login_for_access_token(
 
     return {
         "message": "Login successful",
-        "user": {"username": user.username, "user_id": user.id},
+        "user": {"username": user.username, "user_id": user.id, "role": user.role},
     }
 
 
@@ -83,7 +87,11 @@ async def refresh_token(
     """
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     new_access_token = create_access_token(
-        data={"sub": current_user["username"], "user_id": current_user["user_id"]},
+        data={
+            "sub": current_user["username"],
+            "user_id": current_user["user_id"],
+            "role": current_user.get("role", "student"),
+        },
         expires_delta=access_token_expires,
     )
 
@@ -126,12 +134,18 @@ async def register_user(user_data: UserRegister, db: Session = Depends(get_db)):
 
     hashed_password = get_password_hash(user_data.password)
 
+    role = "student"
+    # Basic logic to set admin role. In production this secret should be from ENV.
+    if user_data.secret_key == "sou_professor_admin":
+        role = "admin"
+
     new_user = User(
         username=user_data.username,
         password_hash=hashed_password,
         email=user_data.email,
         firstname=user_data.firstname,
         lastname=user_data.lastname,
+        role=role,
     )
 
     db.add(new_user)

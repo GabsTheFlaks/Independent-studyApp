@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from './pages/LoginPage';
@@ -7,6 +7,14 @@ import RegisterPage from './pages/RegisterPage';
 import Dashboard from './pages/Dashboard';
 import Viewer from './pages/Viewer';
 import Admin from './pages/Admin';
+
+const AdminRoute = () => {
+    const { user } = useAuth();
+    if (user?.role !== 'admin') {
+        return <Navigate to="/dashboard" replace />;
+    }
+    return <Outlet />;
+};
 
 function App() {
     const { loading } = useAuth();
@@ -30,7 +38,11 @@ function App() {
                 <Route element={<ProtectedRoute />}>
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/course/:id" element={<Viewer />} />
-                    <Route path="/admin" element={<Admin />} />
+
+                    {/* Rotas de Admin */}
+                    <Route element={<AdminRoute />}>
+                        <Route path="/admin" element={<Admin />} />
+                    </Route>
                 </Route>
 
                 {/* Redirect default */}

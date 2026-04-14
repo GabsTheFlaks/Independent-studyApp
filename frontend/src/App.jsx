@@ -6,6 +6,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import Dashboard from './pages/Dashboard';
 import Viewer from './pages/Viewer';
+import Admin from './pages/Admin';
 
 function App() {
     const { loading } = useAuth();
@@ -29,6 +30,7 @@ function App() {
                 <Route element={<ProtectedRoute />}>
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/course/:id" element={<Viewer />} />
+                    <Route path="/admin" element={<Admin />} />
                 </Route>
 
                 {/* Redirect default */}

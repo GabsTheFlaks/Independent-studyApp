@@ -28,7 +28,8 @@ def run_seed():
                 title="Fundamentos de Python e Algoritmos",
                 description="Uma introdução acadêmica aos fundamentos da programação utilizando Python. Ideal para iniciantes.",
                 category="Programação",
-                link_drive="COLE_O_LINK_AQUI",
+                # IMPORTANTE: Para o seu projeto real, substitua o link abaixo pela sua URL do Google Drive ou YouTube
+                link_drive="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
                 file_type="pdf",
                 thumbnail_url="https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=600&q=80",
             ),
@@ -36,7 +37,8 @@ def run_seed():
                 title="Arquitetura de Software Moderna",
                 description="Estudo aprofundado sobre padrões de design, microsserviços e sistemas distribuídos.",
                 category="Engenharia de Software",
-                link_drive="COLE_O_LINK_AQUI",
+                # IMPORTANTE: Para o seu projeto real, substitua o link abaixo pela sua URL do Google Drive ou YouTube
+                link_drive="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
                 file_type="pdf",
                 thumbnail_url="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&q=80",
             ),
@@ -44,7 +46,8 @@ def run_seed():
                 title="Machine Learning em Prática",
                 description="Modelos preditivos, regressões e redes neurais explicadas com exemplos práticos.",
                 category="Inteligência Artificial",
-                link_drive="COLE_O_LINK_AQUI",
+                # IMPORTANTE: Para o seu projeto real, substitua o link abaixo pela sua URL do Google Drive ou YouTube
+                link_drive="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
                 file_type="pdf",
                 thumbnail_url="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=600&q=80",
             ),
@@ -52,7 +55,8 @@ def run_seed():
                 title="Introdução ao React e Tailwind",
                 description="Aula gravada mostrando passo a passo como construir interfaces limpas e responsivas.",
                 category="Frontend",
-                link_drive="COLE_O_LINK_AQUI",
+                # IMPORTANTE: Para o seu projeto real, substitua o link abaixo pela sua URL do Google Drive ou YouTube
+                link_drive="https://www.youtube.com/embed/dQw4w9WgXcQ",
                 file_type="video",
                 thumbnail_url="https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=600&q=80",
             ),

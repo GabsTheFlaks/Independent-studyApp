@@ -85,20 +85,30 @@ const Viewer = () => {
                 )}
             </header>
 
-            <main className="flex-grow w-full bg-gray-200 relative">
-                {/*
-                    O iframe renderiza o conteúdo que vem do Google Drive ou YouTube.
-                    Se for link do Google Drive, idealmente ele deve terminar em /preview
-                    para ser embutido sem erros de restrição de iframe.
-                */}
-                <iframe
-                    src={course.link_drive}
-                    title={course.title}
-                    className="absolute inset-0 w-full h-full border-0"
-                    allow="autoplay; fullscreen"
-                    allowFullScreen
-                    onError={(e) => console.error("Erro ao carregar o iframe", e)}
-                />
+            <main className="flex-grow w-full bg-gray-200 relative flex items-center justify-center">
+                {/* Verifica se o link é válido (começa com http ou https) */}
+                {course.link_drive && course.link_drive.startsWith("http") ? (
+                    <iframe
+                        src={course.link_drive}
+                        title={course.title}
+                        className="absolute inset-0 w-full h-full border-0"
+                        allow="autoplay; fullscreen"
+                        allowFullScreen
+                        onError={(e) => console.error("Erro ao carregar o iframe", e)}
+                    />
+                ) : (
+                    <div className="flex flex-col items-center justify-center text-gray-500">
+                        <AlertCircle className="w-12 h-12 mb-4 text-orange-400" />
+                        <h2 className="text-xl font-medium text-gray-700">Link do material inválido</h2>
+                        <p className="mt-2 text-center max-w-md">
+                            O administrador não forneceu um link válido para este curso.
+                            <br/>
+                            <span className="text-sm bg-gray-100 px-2 py-1 rounded mt-2 inline-block">
+                                Link atual: "{course.link_drive}"
+                            </span>
+                        </p>
+                    </div>
+                )}
             </main>
         </div>
     );

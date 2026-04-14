@@ -37,7 +37,7 @@ class UserResponse(BaseModel):
     lastname: str
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 @router.post("/login")
@@ -132,11 +132,14 @@ async def register_user(user_data: UserRegister, db: Session = Depends(get_db)):
     if db_user_by_email:
         raise HTTPException(status_code=400, detail="Email já está em uso.")
 
+    import os
+
     hashed_password = get_password_hash(user_data.password)
 
     role = "student"
-    # Basic logic to set admin role. In production this secret should be from ENV.
-    if user_data.secret_key == "sou_professor_admin":
+    # Check against environment variable, otherwise fallback to safe empty string
+    admin_secret = os.getenv("ADMIN_SECRET_KEY", "")
+    if admin_secret and user_data.secret_key == admin_secret:
         role = "admin"
 
     new_user = User(

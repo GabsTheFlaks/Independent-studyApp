@@ -27,7 +27,7 @@ class CourseResponse(CourseBase):
     id: int
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 @router.get("/courses", response_model=List[CourseResponse])
@@ -69,7 +69,7 @@ async def create_course(
     """
     Cadastra um novo curso na plataforma. (Apenas admins)
     """
-    new_course = Course(**course_data.model_dump())
+    new_course = Course(**course_data.dict())
     db.add(new_course)
     db.commit()
     db.refresh(new_course)

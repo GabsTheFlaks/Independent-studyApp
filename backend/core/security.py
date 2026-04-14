@@ -4,6 +4,9 @@ from typing import Optional
 import jwt
 from fastapi import Depends, HTTPException, status, Request
 from passlib.context import CryptContext
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Configurações de segurança que idealmente vêm do .env
 # Removemos os fallbacks para garantir que um erro claro ocorra

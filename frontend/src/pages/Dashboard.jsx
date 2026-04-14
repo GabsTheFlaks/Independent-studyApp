@@ -97,11 +97,17 @@ const Dashboard = () => {
                                         src={course.thumbnail_url}
                                         alt={course.title}
                                         className="w-full h-48 object-cover"
+                                        onError={(e) => {
+                                            e.target.onerror = null;
+                                            e.target.src = "https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=600&q=80";
+                                        }}
                                     />
                                 ) : (
-                                    <div className="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500">
-                                        Sem imagem
-                                    </div>
+                                    <img
+                                        src="https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=600&q=80"
+                                        alt="Imagem indisponível"
+                                        className="w-full h-48 object-cover"
+                                    />
                                 )}
                                 <div className="p-6 flex flex-col flex-grow">
                                     <h3 className="text-lg font-bold text-gray-800 mb-2 truncate">

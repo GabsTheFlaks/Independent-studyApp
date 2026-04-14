@@ -1,4 +1,5 @@
 from core.database import engine, Base
+import core.models  # Required to register tables before Base.metadata.create_all
 
 
 def init_db():

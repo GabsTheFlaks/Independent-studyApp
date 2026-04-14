@@ -12,13 +12,6 @@ const Viewer = () => {
 
     useEffect(() => {
         const fetchCourse = async () => {
-            // Validate if ID is a number to prevent backend 422 errors
-            if (isNaN(id) || !Number.isInteger(parseFloat(id))) {
-                setError("ID de curso inválido na URL.");
-                setLoading(false);
-                return;
-            }
-
             try {
                 // Fetch course details by ID
                 const response = await api.get(`/api/courses/${id}`);

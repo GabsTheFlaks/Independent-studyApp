@@ -14,14 +14,6 @@ class User(Base):
     role = Column(String, default="student")
 
 
-class Enrollment(Base):
-    __tablename__ = "enrollments"
-
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, index=True, nullable=False)
-    course_id = Column(Integer, index=True, nullable=False)
-
-
 class Course(Base):
     __tablename__ = "courses"
 

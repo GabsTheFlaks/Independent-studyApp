@@ -40,6 +40,12 @@ const Dashboard = () => {
                         Olá, <strong>{user?.username}</strong>
                     </span>
                     <button
+                        onClick={() => navigate('/admin')}
+                        className="px-4 py-2 text-sm text-white bg-green-600 rounded hover:bg-green-700 transition-colors hidden sm:block"
+                    >
+                        Adicionar Curso
+                    </button>
+                    <button
                         onClick={handleLogout}
                         className="px-4 py-2 text-sm text-white bg-red-500 rounded hover:bg-red-600 transition-colors"
                     >
@@ -47,6 +53,16 @@ const Dashboard = () => {
                     </button>
                 </div>
             </header>
+
+            {/* Mobile Admin Button */}
+            <div className="sm:hidden mb-6">
+                <button
+                    onClick={() => navigate('/admin')}
+                    className="w-full px-4 py-2 text-sm text-white bg-green-600 rounded hover:bg-green-700 transition-colors"
+                >
+                    Adicionar Novo Curso
+                </button>
+            </div>
 
             <main className="max-w-7xl mx-auto">
                 {loading ? (

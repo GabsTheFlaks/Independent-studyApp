@@ -67,7 +67,7 @@ async def create_course(
     db: Session = Depends(get_db),
 ):
     """
-    Cadastra um novo curso na plataforma. (Apenas admins)
+    Cadastra um novo curso na plataforma (Apenas Admin).
     """
     new_course = Course(**course_data.model_dump())
     db.add(new_course)

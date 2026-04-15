@@ -11,8 +11,7 @@ const RegisterPage = () => {
         lastname: "",
         email: "",
         username: "",
-        password: "",
-        secret_key: ""
+        password: ""
     });
     const [error, setError] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
@@ -122,18 +121,6 @@ const RegisterPage = () => {
                             value={formData.password}
                             onChange={handleChange}
                             placeholder="Mínimo 8 caracteres, com números e letras"
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Chave do Professor (Opcional)</label>
-                        <input
-                            type="text"
-                            name="secret_key"
-                            className="w-full px-3 py-2 mt-1 border rounded-md focus:ring-blue-500 focus:border-blue-500"
-                            value={formData.secret_key}
-                            onChange={handleChange}
-                            placeholder="Apenas para contas administrativas"
                         />
                     </div>
 

@@ -8,11 +8,21 @@ import Dashboard from './pages/Dashboard';
 import Viewer from './pages/Viewer';
 import Admin from './pages/Admin';
 
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+
 const AdminRoute = () => {
-    const { user } = useAuth();
-    if (user?.role !== 'admin') {
-        return <Navigate to="/dashboard" replace />;
-    }
+    const { user, loading } = useAuth();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!loading && user?.role !== 'admin') {
+            navigate('/dashboard', { replace: true });
+        }
+    }, [user, loading, navigate]);
+
+    if (loading || user?.role !== 'admin') return null;
+
     return <Outlet />;
 };
 
@@ -39,7 +49,6 @@ function App() {
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/course/:id" element={<Viewer />} />
 
-                    {/* Rotas de Admin */}
                     <Route element={<AdminRoute />}>
                         <Route path="/admin" element={<Admin />} />
                     </Route>

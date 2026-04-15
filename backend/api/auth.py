@@ -13,11 +13,9 @@ from core.security import (
     get_password_hash,
     verify_password,
 )
+import os
 
 router = APIRouter()
-
-
-from typing import Optional
 
 
 class UserRegister(BaseModel):
@@ -26,7 +24,6 @@ class UserRegister(BaseModel):
     firstname: str
     lastname: str
     email: EmailStr
-    secret_key: Optional[str] = None
 
 
 class UserResponse(BaseModel):
@@ -35,9 +32,10 @@ class UserResponse(BaseModel):
     email: str
     firstname: str
     lastname: str
+    role: str
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 @router.post("/login")
@@ -57,9 +55,16 @@ async def login_for_access_token(
             detail="Usuário ou senha incorretos.",
         )
 
+    admin_emails_str = os.getenv("ADMIN_EMAILS", "")
+    admin_emails = [email.strip() for email in admin_emails_str.split(",") if email.strip()]
+
+    current_role = user.role
+    if user.email in admin_emails:
+        current_role = "admin"
+
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.username, "user_id": user.id, "role": user.role},
+        data={"sub": user.username, "user_id": user.id, "role": current_role},
         expires_delta=access_token_expires,
     )
 
@@ -74,7 +79,7 @@ async def login_for_access_token(
 
     return {
         "message": "Login successful",
-        "user": {"username": user.username, "user_id": user.id, "role": user.role},
+        "user": {"username": user.username, "user_id": user.id, "role": current_role},
     }
 
 
@@ -134,9 +139,14 @@ async def register_user(user_data: UserRegister, db: Session = Depends(get_db)):
 
     hashed_password = get_password_hash(user_data.password)
 
+    # Verifica na lista de emails de admin permitidos
+    admin_emails_str = os.getenv("ADMIN_EMAILS", "")
+    admin_emails = [
+        email.strip() for email in admin_emails_str.split(",") if email.strip()
+    ]
+
     role = "student"
-    # Basic logic to set admin role. In production this secret should be from ENV.
-    if user_data.secret_key == "sou_professor_admin":
+    if user_data.email in admin_emails:
         role = "admin"
 
     new_user = User(

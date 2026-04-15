@@ -62,6 +62,7 @@ def get_current_user(request: Request) -> dict:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
         user_id: int = payload.get("user_id")
+        role: str = payload.get("role")
 
         if username is None or user_id is None:
             raise credentials_exception
@@ -69,4 +70,16 @@ def get_current_user(request: Request) -> dict:
         # Pega erros como Token Expired, Signature Invalid, etc.
         raise credentials_exception
 
-    return {"username": username, "user_id": user_id}
+    return {"username": username, "user_id": user_id, "role": role}
+
+
+def get_admin_user(current_user: dict = Depends(get_current_user)) -> dict:
+    """
+    Dependência de segurança que garante que o usuário atual tenha a role 'admin'.
+    """
+    if current_user.get("role") != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Privilégios insuficientes para acessar este recurso.",
+        )
+    return current_user

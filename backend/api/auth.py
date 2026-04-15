@@ -13,6 +13,7 @@ from core.security import (
     get_password_hash,
     verify_password,
 )
+import os
 
 router = APIRouter()
 
@@ -31,9 +32,10 @@ class UserResponse(BaseModel):
     email: str
     firstname: str
     lastname: str
+    role: str
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 @router.post("/login")
@@ -53,9 +55,16 @@ async def login_for_access_token(
             detail="Usuário ou senha incorretos.",
         )
 
+    admin_emails_str = os.getenv("ADMIN_EMAILS", "")
+    admin_emails = [email.strip() for email in admin_emails_str.split(",") if email.strip()]
+
+    current_role = user.role
+    if user.email in admin_emails:
+        current_role = "admin"
+
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.username, "user_id": user.id},
+        data={"sub": user.username, "user_id": user.id, "role": current_role},
         expires_delta=access_token_expires,
     )
 
@@ -70,7 +79,7 @@ async def login_for_access_token(
 
     return {
         "message": "Login successful",
-        "user": {"username": user.username, "user_id": user.id},
+        "user": {"username": user.username, "user_id": user.id, "role": current_role},
     }
 
 
@@ -83,7 +92,11 @@ async def refresh_token(
     """
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     new_access_token = create_access_token(
-        data={"sub": current_user["username"], "user_id": current_user["user_id"]},
+        data={
+            "sub": current_user["username"],
+            "user_id": current_user["user_id"],
+            "role": current_user.get("role", "student"),
+        },
         expires_delta=access_token_expires,
     )
 
@@ -126,12 +139,23 @@ async def register_user(user_data: UserRegister, db: Session = Depends(get_db)):
 
     hashed_password = get_password_hash(user_data.password)
 
+    # Verifica na lista de emails de admin permitidos
+    admin_emails_str = os.getenv("ADMIN_EMAILS", "")
+    admin_emails = [
+        email.strip() for email in admin_emails_str.split(",") if email.strip()
+    ]
+
+    role = "student"
+    if user_data.email in admin_emails:
+        role = "admin"
+
     new_user = User(
         username=user_data.username,
         password_hash=hashed_password,
         email=user_data.email,
         firstname=user_data.firstname,
         lastname=user_data.lastname,
+        role=role,
     )
 
     db.add(new_user)

@@ -6,6 +6,14 @@ Aqui está o roadmap completo do que foi decidido. Siga-o rigorosamente.
 
 ---
 
+## 0. Configuração Inicial e Clonagem (IMPORTANTE)
+
+Como este repositório está limpo, **sua primeira tarefa antes de qualquer refatoração** é clonar o código fonte original para cá.
+*   O usuário irá te fornecer (no prompt inicial ou via variáveis) a URL do repositório antigo.
+*   Clone o repositório original para dentro desta pasta, garantindo que você tenha as pastas `frontend` (React) e `backend` (FastAPI) devidamente mapeadas no seu ambiente antes de prosseguir com os passos abaixo.
+
+---
+
 ## 1. Refatoração Visual: Interface estilo Google Classroom
 
 O objetivo principal do frontend é abandonar o layout atual genérico e adotar uma interface limpa, dividida e focada em turmas, semelhante ao Google Classroom.
